@@ -8,7 +8,7 @@ from openai import OpenAI
 from django.utils.safestring import mark_safe
 
 load_dotenv()
-client = OpenAI(api_key="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")
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def review_resume(request):
     feedback = None
