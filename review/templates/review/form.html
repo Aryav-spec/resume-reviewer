@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Resume Reviewer - Compare Your Resume to Jobs</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.2/dist/tailwind.min.css" rel="stylesheet" />
+  <title>Semantic Resume Matcher</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col items-center p-8">
   <header class="w-full max-w-4xl mb-8">
@@ -18,21 +18,14 @@
   <main class="w-full max-w-3xl bg-gray-800 rounded-lg p-8 shadow-lg">
     <form method="post" enctype="multipart/form-data" class="space-y-6">
       {% csrf_token %}
-
       <div>
-        <label for="{{ form.resume.id_for_label }}" class="block mb-2 font-semibold text-purple-300">Upload Your Resume (PDF or DOCX)</label>
-        {{ form.resume.as_widget(attrs={
-          "class": "block w-full rounded-md bg-purple-700 border border-purple-600 text-purple-100 focus:ring-2 focus:ring-purple-400 focus:outline-none py-3 px-4"
-        }) }}
+        <label for="{{ form.resume.id_for_label }}" class="block mb-2 font-semibold text-purple-300">Upload Your Resume</label>
+        {{ form.resume }}
       </div>
 
       <div>
         <label for="{{ form.job_description.id_for_label }}" class="block mb-2 font-semibold text-purple-300">Paste Job Description</label>
-        {{ form.job_description.as_widget(attrs={
-          "class": "block w-full rounded-md bg-purple-700 border border-purple-600 text-purple-100 focus:ring-2 focus:ring-purple-400 focus:outline-none py-3 px-4",
-          "rows": "8",
-          "placeholder": "Paste the full job description here..."
-        }) }}
+        {{ form.job_description }}
       </div>
 
       <button type="submit" class="w-full py-3 bg-purple-600 hover:bg-purple-500 rounded-md font-semibold transition">
@@ -40,22 +33,9 @@
       </button>
     </form>
 
-    {% if similarity_score %}
-      <div class="mt-6 p-4 bg-purple-700 rounded-md text-center text-purple-200 font-semibold">
-        Match Score: {{ similarity_score|floatformat:2 }}
-      </div>
-    {% endif %}
-
     {% if feedback %}
       <div class="feedback-section mt-8 p-6 bg-gray-700 rounded-lg border border-purple-600">
-        <h2 class="text-xl font-semibold text-green-400 mb-2">✅ Strengths</h2>
-        <p class="mb-4 whitespace-pre-wrap">{{ feedback.strengths }}</p>
-
-        <h2 class="text-xl font-semibold text-yellow-400 mb-2">⚠️ Gaps</h2>
-        <p class="mb-4 whitespace-pre-wrap">{{ feedback.gaps }}</p>
-
-        <h2 class="text-xl font-semibold text-purple-400 mb-2">💡 Suggestions</h2>
-        <p class="whitespace-pre-wrap">{{ feedback.suggestions }}</p>
+        {{ feedback|safe }}
       </div>
     {% endif %}
   </main>
