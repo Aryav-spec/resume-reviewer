@@ -33,6 +33,13 @@
       </button>
     </form>
 
+    {% if similarity_score %}
+        <div class="mt-6 p-4 bg-purple-700 rounded-md text-center text-purple-200 font-semibold">
+            Match Score: {{ similarity_score|floatformat:2 }}%
+        </div>
+    {% endif %}
+
+
     {% if feedback %}
       <div class="feedback-section mt-8 p-6 bg-gray-700 rounded-lg border border-purple-600">
         {{ feedback|safe }}

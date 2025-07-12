@@ -6,6 +6,7 @@ from .utils import extract_resume_text
 from dotenv import load_dotenv
 from openai import OpenAI
 from django.utils.safestring import mark_safe
+from .embedding_utils import get_embedding, cosine_similarity
 
 load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -21,6 +22,9 @@ def review_resume(request):
             job_description = form.cleaned_data["job_description"]
 
             resume_text = extract_resume_text(resume_file)
+            resume_embedding = get_embedding(resume_text)
+            job_embedding = get_embedding(job_description)
+            similarity_score = cosine_similarity(resume_embedding, job_embedding)
 
             prompt = f"""
             You are a helpful resume reviewer. Here's how to analyze resumes against job descriptions.
@@ -58,4 +62,4 @@ def review_resume(request):
     else:
         form = ResumeReviewForm()
 
-    return render(request, "review/form.html", {"form": form, "feedback": feedback})
+    return render(request, "review/form.html", {"form": form, "feedback": feedback, "similarity_score": similarity_score * 100})
