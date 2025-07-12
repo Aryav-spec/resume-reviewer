@@ -22,14 +22,29 @@ def review_resume(request):
 
             resume_text = extract_resume_text(resume_file)
 
-            prompt = f"""You are a helpful career assistant. Given the following resume and job description, provide detailed feedback on how well the resume matches the job, what to improve, and what strengths stand out.
+            prompt = f"""
+            You are a helpful resume reviewer. Here's how to analyze resumes against job descriptions.
 
-Resume:
-{resume_text}
+            Example:
+            Resume:
+            - Experience: Google SWE intern, Python, C++, ML
+            Job:
+            - Looking for: Python, ML, leadership
 
-Job Description:
-{job_description}
-"""
+            Output:
+            ✅ Strengths: Strong ML background, Google intern.
+            ⚠️ Gaps: No leadership shown.
+            💡 Suggestions: Add leadership experience or impact bullet points.
+
+            Now analyze the following:
+
+            Resume:
+            {resume_text}
+
+            Job Description:
+            {job_description}
+            """
+
 
             response = client.chat.completions.create(
                 model="gpt-4o",

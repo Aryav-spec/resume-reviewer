@@ -1,99 +1,63 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ResumeMatch AI</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    /* Custom font & glow effect */
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #110a2a; /* dark purple */
-      color: #e0d7f5; /* light purple/gray */
-    }
-    /* Purple glow for navbar */
-    .nav-glow {
-      box-shadow: 0 0 15px 3px #16149eaa;
-    }
-    /* Smooth transition for buttons */
-    button {
-      transition: background-color 0.3s ease;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>Resume to Job Match</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    {% load widget_tweaks %}
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col items-center p-6">
 
-  <!-- Top Purple Bar -->
-  <header class="nav-glow fixed top-0 left-0 right-0 bg-gradient-to-r from-purple-900 via-purple-800 to-purple-900 z-50 shadow-lg">
-    <div class="container mx-auto flex justify-between items-center py-4 px-6">
-      <h1 class="text-white font-extrabold text-3xl tracking-wide drop-shadow-md">
-        ResumeMatch AI
-      </h1>
-      <p class="text-purple-300 mt-1 text-center max-w-xl mx-auto font-semibold tracking-wide">
-        Compare your resume to any job description. Get instant AI feedback to improve and shine.
-      </p>
-
-      <nav class="space-x-6 text-purple-300">
-        <a href="#" class="hover:text-white font-semibold transition">Home</a>
-        <a href="#" class="hover:text-white font-semibold transition">About</a>
-        <a href="#" class="hover:text-white font-semibold transition">Contact</a>
-      </nav>
-    </div>
-  </header>
-
-  <!-- Main content wrapper to offset fixed nav height -->
-  <main class="flex-grow container mx-auto px-6 pt-28 max-w-3xl">
-
-    <section class="bg-gradient-to-br from-purple-900 to-purple-800 rounded-2xl shadow-2xl p-10">
-      <h2 class="text-4xl font-bold text-purple-200 mb-8 text-center tracking-wide drop-shadow-lg">
-        Upload Your Resume for AI Review
-      </h2>
-
-      <form method="post" enctype="multipart/form-data" id="review-form" class="space-y-8">
-        {% csrf_token %}
-
-        <div>
-            <label for="{{ form.resume.id_for_label }}" class="block mb-3 font-semibold text-purple-300">
-            Resume (PDF or DOCX)
-            </label>
-            {{ form.resume }}
+    <!-- Navbar -->
+    <header class="w-full max-w-4xl mb-8">
+        <div class="bg-purple-800 text-white rounded-xl shadow-lg p-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Resume to Job Match</h1>
+            <span class="text-sm opacity-75">AI Resume Reviewer</span>
         </div>
+    </header>
 
-        <div>
-            <label for="{{ form.job_description.id_for_label }}" class="block mb-3 font-semibold text-purple-300">
-            Job Description
-            </label>
-            {{ form.job_description }}
-        </div>
+    <!-- Form Card -->
+    <div class="w-full max-w-4xl bg-gray-800 p-8 rounded-xl shadow-lg">
+        <form method="post" enctype="multipart/form-data" class="space-y-6">
+            {% csrf_token %}
 
-        <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 rounded-xl shadow-lg drop-shadow-lg">
-            Submit for Review
-        </button>
+            <!-- Resume Upload -->
+            <div>
+                <label class="block text-sm font-medium mb-1 text-purple-300">Upload your Resume</label>
+                {{ form.resume|add_class:"w-full p-3 bg-gray-700 text-white rounded-md border border-gray-600" }}
+            </div>
+
+            <!-- Job Description -->
+            <div>
+                <label class="block text-sm font-medium mb-1 text-purple-300">Paste Job Description</label>
+                {{ form.job_description|add_class:"w-full p-3 bg-gray-700 text-white rounded-md border border-gray-600 h-40" }}
+            </div>
+
+            <button type="submit" class="w-full py-3 px-4 bg-purple-700 hover:bg-purple-600 text-white font-bold rounded-md">
+                🔍 Analyze Resume
+            </button>
         </form>
+    </div>
 
+    <!-- Feedback Section -->
+    {% if feedback %}
+    <div class="w-full max-w-4xl bg-gray-800 mt-8 p-6 rounded-xl shadow-lg space-y-6">
+        <div>
+            <h2 class="text-lg font-semibold text-green-400">✅ Strengths</h2>
+            <p class="mt-2 text-gray-200">{{ feedback.strengths }}</p>
+        </div>
 
-      {% if feedback %}
-      <section class="mt-12 bg-purple-700 border border-purple-600 rounded-xl p-6 max-h-96 overflow-y-auto text-purple-100 font-mono whitespace-pre-wrap drop-shadow-lg">
-        <h3 class="text-xl font-semibold mb-4 tracking-wide">AI Feedback</h3>
-        {{ feedback }}
-      </section>
-      {% endif %}
-    </section>
+        <div>
+            <h2 class="text-lg font-semibold text-yellow-400">⚠️ Gaps</h2>
+            <p class="mt-2 text-gray-200">{{ feedback.gaps }}</p>
+        </div>
 
-  </main>
+        <div>
+            <h2 class="text-lg font-semibold text-purple-400">💡 Suggestions</h2>
+            <p class="mt-2 text-gray-200">{{ feedback.suggestions }}</p>
+        </div>
+    </div>
+    {% endif %}
 
-  <footer class="text-center py-6 mt-auto text-purple-400 text-sm select-none">
-    &copy; 2025 ResumeMatch AI. All rights reserved.
-  </footer>
-
-  <script>
-    const form = document.getElementById('review-form');
-    const loading = document.getElementById('loading');
-
-    form.addEventListener('submit', () => {
-      loading.classList.remove('hidden');
-    });
-  </script>
 </body>
 </html>
