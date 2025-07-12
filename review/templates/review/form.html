@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dark Purple Resume Reviewer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Custom font & glow effect */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #1a103c; /* dark purple */
+      color: #e0d7f5; /* light purple/gray */
+    }
+    /* Purple glow for navbar */
+    .nav-glow {
+      box-shadow: 0 0 15px 3px #7c3aedaa;
+    }
+    /* Smooth transition for buttons */
+    button {
+      transition: background-color 0.3s ease;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Top Purple Bar -->
+  <header class="nav-glow fixed top-0 left-0 right-0 bg-gradient-to-r from-purple-900 via-purple-800 to-purple-900 z-50 shadow-lg">
+    <div class="container mx-auto flex justify-between items-center py-4 px-6">
+      <h1 class="text-white font-extrabold text-3xl tracking-wide drop-shadow-md">
+        ResumeMatch AI
+      </h1>
+      <p class="text-purple-300 mt-1 text-center max-w-xl mx-auto font-semibold tracking-wide">
+        Compare your resume to any job description. Get instant AI feedback to improve and shine.
+      </p>
+
+      <nav class="space-x-6 text-purple-300">
+        <a href="#" class="hover:text-white font-semibold transition">Home</a>
+        <a href="#" class="hover:text-white font-semibold transition">About</a>
+        <a href="#" class="hover:text-white font-semibold transition">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main content wrapper to offset fixed nav height -->
+  <main class="flex-grow container mx-auto px-6 pt-28 max-w-3xl">
+
+    <section class="bg-gradient-to-br from-purple-900 to-purple-800 rounded-2xl shadow-2xl p-10">
+      <h2 class="text-4xl font-bold text-purple-200 mb-8 text-center tracking-wide drop-shadow-lg">
+        Upload Your Resume for AI Review
+      </h2>
+
+      <form method="post" enctype="multipart/form-data" id="review-form" class="space-y-8">
+        {% csrf_token %}
+
+        <div>
+            <label for="{{ form.resume.id_for_label }}" class="block mb-3 font-semibold text-purple-300">
+            Resume (PDF or DOCX)
+            </label>
+            {{ form.resume }}
+        </div>
+
+        <div>
+            <label for="{{ form.job_description.id_for_label }}" class="block mb-3 font-semibold text-purple-300">
+            Job Description
+            </label>
+            {{ form.job_description }}
+        </div>
+
+        <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 rounded-xl shadow-lg drop-shadow-lg">
+            Submit for Review
+        </button>
+        </form>
+
+
+      {% if feedback %}
+      <section class="mt-12 bg-purple-700 border border-purple-600 rounded-xl p-6 max-h-96 overflow-y-auto text-purple-100 font-mono whitespace-pre-wrap drop-shadow-lg">
+        <h3 class="text-xl font-semibold mb-4 tracking-wide">AI Feedback</h3>
+        {{ feedback }}
+      </section>
+      {% endif %}
+    </section>
+
+  </main>
+
+  <footer class="text-center py-6 mt-auto text-purple-400 text-sm select-none">
+    &copy; 2025 ResumeMatch AI. All rights reserved.
+  </footer>
+
+  <script>
+    const form = document.getElementById('review-form');
+    const loading = document.getElementById('loading');
+
+    form.addEventListener('submit', () => {
+      loading.classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>
