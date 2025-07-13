@@ -13,6 +13,7 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def review_resume(request):
     feedback = None
+    similarity_score = 0
 
     if request.method == "POST":
         form = ResumeReviewForm(request.POST, request.FILES)
