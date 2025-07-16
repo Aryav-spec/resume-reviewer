@@ -34,10 +34,11 @@
     </form>
 
     {% if similarity_score %}
-        <div class="mt-6 p-4 bg-purple-700 rounded-md text-center text-purple-200 font-semibold">
-            Match Score: {{ similarity_score|floatformat:2 }}%
-        </div>
+    <div class="mt-4 text-blue-600">
+        <strong>Semantic Match:</strong> {{ similarity_score|floatformat:2 }}%
+    </div>
     {% endif %}
+
 
 
     {% if feedback %}
